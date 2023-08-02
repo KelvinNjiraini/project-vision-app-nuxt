@@ -1,7 +1,6 @@
 <template>
     <div>
-        <h2>primary page</h2>
-        <LeftPanel />
+        <h3>Primary page index.vue</h3>
     </div>
 </template>
 

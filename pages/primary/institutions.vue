@@ -1,7 +1,6 @@
 <template>
     <div>
-        <h2>primary page</h2>
-        <LeftPanel />
+        <h2>Institutions</h2>
     </div>
 </template>
 
