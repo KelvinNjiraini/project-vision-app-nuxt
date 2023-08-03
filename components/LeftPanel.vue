@@ -1,7 +1,7 @@
 <template>
-    <div class="min-h-screen bg-purple-500 w-52">
-        <div class="flex flex-col">
-            <ul>
+    <div class="h-screen bg-purple-500 w-52">
+        <div class="flex flex-col mt-16 pl-4">
+            <ul class="space-y-10">
                 <li>
                     <nuxt-link to="/primary/dashboard">Dashboard</nuxt-link>
                 </li>
@@ -11,8 +11,10 @@
                         >Institutions</nuxt-link
                     >
                 </li>
-                <li><button>Sign out</button></li>
             </ul>
+            <div class="mt-5">
+                <button>Sign out</button>
+            </div>
         </div>
     </div>
 </template>
