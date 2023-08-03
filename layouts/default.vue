@@ -1,7 +1,9 @@
 <template>
     <div class="flex">
         <LeftPanel />
-        <slot />
+        <div class="flex-grow">
+            <slot />
+        </div>
     </div>
 </template>
 
