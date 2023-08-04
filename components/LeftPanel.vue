@@ -50,10 +50,10 @@
             </ul>
             <div class="p-3 mt-auto">
                 <button class="flex items-center group">
-                    <span class="mr-3 text-red-800">Sign Out</span>
+                    <span class="mr-3 text-red-900">Sign Out</span>
                     <Icon
                         name="ic:outline-logout"
-                        class="text-red-800 w-6 h-6"
+                        class="text-red-900 w-6 h-6"
                     />
                 </button>
             </div>
@@ -63,4 +63,8 @@
 <script setup lang="ts">
 //
 </script>
-<style></style>
+<style scoped>
+a.router-link-exact-active {
+    @apply bg-white text-black;
+}
+</style>
