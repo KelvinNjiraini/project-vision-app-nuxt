@@ -1,5 +1,5 @@
 <template>
-    <div class="p-12">
+    <div>
         <h2 class="text-2xl text-slate-800 font-bold mb-3">My profile</h2>
         <div class="flex flex-col">
             <div class="max-w-lg text-slate-800">

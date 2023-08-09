@@ -11,6 +11,7 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@types/node": "^18.16.19",
+    "@types/tabulator-tables": "^5.4.10",
     "autoprefixer": "^10.4.14",
     "nuxt": "^3.6.5",
     "nuxt-icon": "^0.4.2",
@@ -26,6 +27,7 @@
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@pinia/nuxt": "^0.4.11",
-    "pinia": "^2.1.4"
+    "pinia": "^2.1.4",
+    "vue3-easy-data-table": "^1.5.47"
   }
 }

@@ -2,7 +2,9 @@
     <div class="flex">
         <LeftPanel />
         <div class="flex-grow">
-            <slot />
+            <div class="p-12">
+                <slot />
+            </div>
         </div>
     </div>
 </template>
