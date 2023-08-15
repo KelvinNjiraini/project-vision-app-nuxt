@@ -1,5 +1,19 @@
 <template>
-    <div class="h-screen bg-purple-600 bg-opacity-80 w-52">
+    <div
+        class="h-screen bg-purple-600 bg-opacity-80 min-w-[15rem] relative transition-all"
+        :class="panelActive ? 'active' : ''"
+    >
+        <div
+            class="inline md:hidden absolute right-5"
+            :class="panelActive ? 'hamburger-active top-5' : '-top-5'"
+        >
+            <Icon
+                name="pajamas:hamburger"
+                class="w-6 h-6 cursor-pointer"
+                :class="panelActive ? 'text-black' : 'text-white ml-12 mt-12 '"
+                @click="toggleLeftPanel"
+            />
+        </div>
         <h3 class="text-white text-2xl pl-7 pt-6">Project Vision</h3>
         <div class="flex flex-col py-6 h-3/4 pl-4">
             <ul class="space-y-3">
@@ -61,10 +75,23 @@
     </div>
 </template>
 <script setup lang="ts">
-//
+import { ref } from 'vue';
+const panelActive = ref(false);
+
+function toggleLeftPanel() {
+    panelActive.value = !panelActive.value;
+}
 </script>
 <style scoped>
 a.router-link-exact-active {
     @apply bg-white text-black;
+}
+
+.active {
+    @apply right-[16rem];
+}
+
+.hamburger-active {
+    @apply text-black -right-[5rem] bg-purple-300 p-3 rounded-full;
 }
 </style>
