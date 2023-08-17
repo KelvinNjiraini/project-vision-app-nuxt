@@ -6,6 +6,8 @@ export default defineNuxtConfig({
         '@pinia-plugin-persistedstate/nuxt',
         '@nuxtjs/tailwindcss',
         'nuxt-icon',
+        '@nuxtjs/supabase',
+        '@vueuse/nuxt',
     ],
     css: ['~/assets/css/main.css'],
     postcss: {
@@ -13,5 +15,13 @@ export default defineNuxtConfig({
             tailwindcss: {},
             autoprefixer: {},
         },
+    },
+    supabase: {
+        redirect: false,
+        // redirectOptions: {
+        //     login: '',
+        //     callback: '/',
+        //     exclude: ['/primary/*'],
+        // },
     },
 });
