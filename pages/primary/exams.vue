@@ -110,4 +110,8 @@ const exams: Ref<Item[]> = ref([
         id: '6sie93',
     },
 ]);
+
+definePageMeta({
+    middleware: 'auth',
+});
 </script>

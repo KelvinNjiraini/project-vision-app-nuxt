@@ -8,4 +8,8 @@
 import { ref } from 'vue';
 
 const message = ref('Primary page index.vue');
+
+definePageMeta({
+    middleware: 'auth',
+});
 </script>

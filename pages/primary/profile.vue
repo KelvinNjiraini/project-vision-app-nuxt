@@ -105,6 +105,10 @@ function changeDetails() {
 function changePassword() {
     //
 }
+
+definePageMeta({
+    middleware: 'auth',
+});
 </script>
 
 <style lang="scss" scoped></style>

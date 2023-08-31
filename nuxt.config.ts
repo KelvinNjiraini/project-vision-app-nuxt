@@ -8,6 +8,7 @@ export default defineNuxtConfig({
         'nuxt-icon',
         '@nuxtjs/supabase',
         '@vueuse/nuxt',
+        '@element-plus/nuxt',
     ],
     css: ['~/assets/css/main.css'],
     postcss: {

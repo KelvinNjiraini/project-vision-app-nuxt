@@ -1,5 +1,8 @@
 <template>
-    <div class="flex justify-center items-center min-h-screen">
+    <div
+        class="flex justify-center items-center min-h-screen"
+        v-loading="isLoading"
+    >
         <!-- start of card -->
         <div
             class="shadow-xl bg-slate-200 rounded-lg p-8 flex flex-col space-x-5"
@@ -23,17 +26,19 @@
                             id="email"
                             class="text-base px-5 py-2 rounded-md"
                             placeholder="Enter your email address"
+                            v-model="email"
                         />
                     </div>
 
                     <div class="flex flex-col space-y-1">
                         <label for="password" class="text-base">Password</label>
                         <input
-                            type="text"
+                            type="password"
                             name="password"
                             id="password"
                             class="text-base px-5 py-2 rounded-md"
                             placeholder="Enter your password"
+                            v-model="password"
                         />
                     </div>
 
@@ -46,7 +51,7 @@
                             {{ authState === 'login' ? 'Login' : 'Signup' }}
                         </button>
                         <button
-                            class="outline-none underline hover:text-purple-500 ml-3"
+                            class="outline-none underline hover:text-purple-500 ml-3 cursor-pointer"
                             @click="changeAuthState"
                             type="button"
                         >
@@ -63,10 +68,17 @@
     </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+const { query } = useRoute();
 
+const client = useSupabaseClient();
+const user = useSupabaseUser();
 const authState = ref('login');
+
+const email = ref('');
+const password = ref('');
+const isLoading = ref(false);
 
 function changeAuthState() {
     if (authState.value === 'login') {
@@ -77,8 +89,48 @@ function changeAuthState() {
 }
 
 function onSubmit() {
-    console.log('Submitted!');
+    isLoading.value = true;
+    if (authState.value === 'signup') {
+        signup();
+        return;
+    }
+    // signin function
+    login();
+    isLoading.value = false;
 }
+
+const signup = async () => {
+    const { data, error } = await client.auth.signUp({
+        email: email.value,
+        password: password.value,
+    });
+
+    console.log(data);
+    if (error) console.log(error);
+};
+const login = async () => {
+    const { data, error } = await client.auth.signInWithPassword({
+        email: email.value,
+        password: password.value,
+    });
+    console.log(data);
+    if (error) console.log(error);
+};
+
+watchEffect(async () => {
+    if (user.value) {
+        if (query && query.redirectTo) {
+            return await navigateTo(query.redirectTo as string, {
+                replace: true,
+            });
+        }
+        return await navigateTo('/primary/dashboard');
+    }
+});
+
+onMounted(() => {
+    console.log(user.value);
+});
 </script>
 
 <style lang="scss" scoped>

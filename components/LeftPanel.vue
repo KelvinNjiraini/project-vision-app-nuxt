@@ -90,7 +90,7 @@ const { height, width } = useWindowSize();
 const panelActive = ref(false);
 
 const showPanel = computed(() => {
-    return !panelActive.value && width.value < 768;
+    return width.value < 768 && !panelActive.value;
 });
 
 function toggleLeftPanel() {
