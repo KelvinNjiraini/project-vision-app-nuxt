@@ -70,7 +70,7 @@
                     </li>
                 </ul>
                 <div class="p-3 mt-auto">
-                    <button class="flex items-center group">
+                    <button class="flex items-center group" @click="signOut">
                         <span class="mr-3 text-red-900">Sign Out</span>
                         <Icon
                             name="ic:outline-logout"
@@ -85,7 +85,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useWindowSize } from '@vueuse/core';
+const { path } = useRoute();
 const { height, width } = useWindowSize();
+const client = useSupabaseClient();
+const user = useSupabaseUser();
 
 const panelActive = ref(false);
 
@@ -96,6 +99,18 @@ const showPanel = computed(() => {
 function toggleLeftPanel() {
     panelActive.value = !panelActive.value;
 }
+
+async function signOut() {
+    const { error } = await client.auth.signOut();
+}
+// watchEffect(async () => {
+//     if (!user.value) {
+//         if (path.indexOf('/primary/auth') > 0) {
+//             return;
+//         }
+//         return await navigateTo('/primary/auth');
+//     }
+// });
 </script>
 <style scoped>
 a.router-link-exact-active {
