@@ -89,17 +89,16 @@ function changeAuthState() {
 }
 
 function onSubmit() {
-    isLoading.value = true;
     if (authState.value === 'signup') {
         signup();
         return;
     }
     // signin function
     login();
-    isLoading.value = false;
 }
 
 const signup = async () => {
+    isLoading.value = true;
     const { data, error } = await client.auth.signUp({
         email: email.value,
         password: password.value,
@@ -107,14 +106,17 @@ const signup = async () => {
 
     console.log(data);
     if (error) console.log(error);
+    isLoading.value = false;
 };
 const login = async () => {
+    isLoading.value = true;
     const { data, error } = await client.auth.signInWithPassword({
         email: email.value,
         password: password.value,
     });
     console.log(data);
     if (error) console.log(error);
+    isLoading.value = false;
 };
 
 watchEffect(async () => {
@@ -130,6 +132,10 @@ watchEffect(async () => {
 
 onMounted(() => {
     console.log(user.value);
+});
+
+definePageMeta({
+    layout: 'plain',
 });
 </script>
 

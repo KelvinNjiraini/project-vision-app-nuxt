@@ -6,7 +6,9 @@
 </template>
 
 <script lang="ts">
-//
+definePageMeta({
+    layout: 'plain',
+});
 </script>
 
 <style scoped></style>
