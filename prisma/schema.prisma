@@ -9,3 +9,97 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id Int @id @default(autoincrement())
+  // id String @id @unique
+  email   String  @unique
+  firstName String
+  lastName String
+  levelOfEducation String
+  subjects UserSubject[]
+  exams UserExam[]
+  favoriteCourses UserCourse[]
+  favoriteSchool UserSchool[]
+}
+
+model Exam {
+  id Int @id @default(autoincrement())
+  name String
+  class Int?
+  form  Int?
+  subjectScores SubjectScore[]
+  users UserExam[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserExam {
+  examId Int
+  exam Exam @relation(fields: [examId], references: [id])
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([examId, userId])
+}
+
+model School {
+  id Int @id @default(autoincrement())
+  name String
+  level String
+  type String
+  users UserSchool[]
+}
+
+model UserSchool {
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  schoolId Int
+  school School @relation(fields: [schoolId], references: [id])
+
+  @@id([userId, schoolId])
+}
+
+model Course {
+  id Int @id @default(autoincrement())
+  name String
+  duration Int
+  description String
+  pathways String
+  users UserCourse[]
+}
+
+model UserCourse {
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  courseId Int
+  course Course @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId])
+}
+
+model Subject {
+  id Int @id @default(autoincrement())
+  name String
+  level String
+  subjectScores SubjectScore[]
+  users UserSubject[]
+}
+
+model SubjectScore {
+  id Int @id @default(autoincrement())
+  score Float
+  subject Subject @relation(fields: [subjectId], references: [id])
+  subjectId Int
+  exam Exam @relation(fields: [examId], references: [id])
+  examId Int
+}
+
+model UserSubject {
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  subjectId Int
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  @@id([userId, subjectId])
+}
