@@ -5,7 +5,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 definePageMeta({
     layout: 'plain',
 });
