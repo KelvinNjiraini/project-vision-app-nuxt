@@ -18,10 +18,65 @@
             <!-- Actual form -->
             <form @submit.prevent="onSubmit">
                 <div class="flex flex-col space-y-5 text-slate-600 mt-4">
+                    <div
+                        class="flex flex-col space-y-1"
+                        v-if="authState === 'signup'"
+                    >
+                        <label for="firstName" class="text-base"
+                            >First Name</label
+                        >
+                        <input
+                            type="text"
+                            name="firstName"
+                            id="firstName"
+                            class="text-base px-5 py-2 rounded-md"
+                            placeholder="Enter your first name"
+                            v-model="firstName"
+                        />
+                    </div>
+                    <div
+                        class="flex flex-col space-y-1"
+                        v-if="authState === 'signup'"
+                    >
+                        <label for="lastName" class="text-base"
+                            >Last Name</label
+                        >
+                        <input
+                            type="text"
+                            name="lastName"
+                            id="lastName"
+                            class="text-base px-5 py-2 rounded-md"
+                            placeholder="Enter your first name"
+                            v-model="lastName"
+                        />
+                    </div>
+                    <div
+                        class="flex flex-col space-y-1"
+                        v-if="authState === 'signup'"
+                    >
+                        <label for="levelOfEducation" class="text-base"
+                            >Last Name</label
+                        >
+
+                        <select
+                            name="levelOfEducation"
+                            id="levelOfEducation"
+                            v-model="levelOfEducation"
+                            class="text-base px-5 py-2 rounded-md"
+                        >
+                            <option value="">
+                                Select your level of education
+                            </option>
+                            <option value="primary">Primary</option>
+                            <option value="high-school">
+                                High School/Secondary
+                            </option>
+                        </select>
+                    </div>
                     <div class="flex flex-col space-y-1">
                         <label for="email" class="text-base">Email</label>
                         <input
-                            type="text"
+                            type="email"
                             name="email"
                             id="email"
                             class="text-base px-5 py-2 rounded-md"
@@ -79,6 +134,9 @@ const authState = ref('login');
 const email = ref('');
 const password = ref('');
 const isLoading = ref(false);
+const firstName = ref('');
+const lastName = ref('');
+const levelOfEducation = ref('');
 
 function changeAuthState() {
     if (authState.value === 'login') {
