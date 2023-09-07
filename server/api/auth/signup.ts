@@ -1,3 +1,3 @@
 export default defineEventHandler((event) => {
-    return 'Hello world';
+    // sign up and register code
 });

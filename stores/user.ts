@@ -5,5 +5,10 @@ export const useUserStore = defineStore('user', {
         isLoggedIn: false,
         userData: null,
     }),
+    actions: {
+        logout() {
+            this.userData = null;
+        },
+    },
     persist: true,
 });

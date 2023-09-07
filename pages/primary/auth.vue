@@ -125,12 +125,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { createUser } from '@/server/database/userRepository';
 const { query } = useRoute();
 
 const client = useSupabaseClient();
 const user = useSupabaseUser();
-const authState = ref('login');
 
+const authState = ref('login');
 const email = ref('');
 const password = ref('');
 const isLoading = ref(false);
@@ -157,13 +158,50 @@ function onSubmit() {
 
 const signup = async () => {
     isLoading.value = true;
-    const { data, error } = await client.auth.signUp({
-        email: email.value,
-        password: password.value,
-    });
+    try {
+        const { data, error } = await client.auth.signUp({
+            email: email.value,
+            password: password.value,
+            options: {
+                data: {
+                    firstName: firstName.value,
+                    lastName: lastName.value,
+                    levelOfEducation: levelOfEducation.value,
+                },
+            },
+        });
+        if (error) {
+            throw error;
+        }
+        console.log(data);
+        if (data && data.user) {
+            const { email: email_address } = data.user;
+            const {
+                firstName: first_name,
+                lastName: last_name,
+                levelOfEducation: level_of_education,
+            } = data.user.user_metadata;
 
-    console.log(data);
-    if (error) console.log(error);
+            if (
+                email_address &&
+                first_name &&
+                last_name &&
+                level_of_education
+            ) {
+                const userData = {
+                    email: email_address,
+                    firstName: first_name,
+                    lastName: last_name,
+                    levelOfEducation: level_of_education,
+                };
+                const newUser = await createUser(userData);
+                console.log(newUser);
+            }
+        }
+        // if (error) console.log(error);
+    } catch (err) {
+        console.log(err);
+    }
     isLoading.value = false;
 };
 const login = async () => {
@@ -172,6 +210,7 @@ const login = async () => {
         email: email.value,
         password: password.value,
     });
+
     console.log(data);
     if (error) console.log(error);
     isLoading.value = false;
