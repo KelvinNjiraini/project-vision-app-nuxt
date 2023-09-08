@@ -16,109 +16,104 @@
                 }}
             </h2>
             <!-- Actual form -->
-            <form @submit.prevent="onSubmit">
-                <div class="flex flex-col space-y-5 text-slate-600 mt-4">
-                    <div
-                        class="flex flex-col space-y-1"
+            <el-form
+                @submit.prevent="onSubmit"
+                label-position="top"
+                label-width="100px"
+            >
+                <div class="flex flex-col text-slate-600 mt-4">
+                    <el-form-item
+                        label="First Name"
                         v-if="authState === 'signup'"
                     >
-                        <label for="firstName" class="text-base"
-                            >First Name</label
-                        >
-                        <input
+                        <el-input
                             type="text"
                             name="firstName"
                             id="firstName"
-                            class="text-base px-5 py-2 rounded-md"
                             placeholder="Enter your first name"
                             v-model="firstName"
+                            size="large"
                         />
-                    </div>
-                    <div
-                        class="flex flex-col space-y-1"
+                    </el-form-item>
+                    <el-form-item
+                        label="Last Name"
                         v-if="authState === 'signup'"
                     >
-                        <label for="lastName" class="text-base"
-                            >Last Name</label
-                        >
-                        <input
+                        <el-input
                             type="text"
                             name="lastName"
                             id="lastName"
-                            class="text-base px-5 py-2 rounded-md"
                             placeholder="Enter your first name"
                             v-model="lastName"
+                            size="large"
                         />
-                    </div>
-                    <div
-                        class="flex flex-col space-y-1"
+                    </el-form-item>
+                    <el-form-item
+                        label="Level Of Education"
                         v-if="authState === 'signup'"
                     >
-                        <label for="levelOfEducation" class="text-base"
-                            >Last Name</label
-                        >
-
-                        <select
+                        <el-select
                             name="levelOfEducation"
                             id="levelOfEducation"
                             v-model="levelOfEducation"
-                            class="text-base px-5 py-2 rounded-md"
+                            size="large"
+                            class="w-full"
                         >
-                            <option value="">
+                            <el-option value="">
                                 Select your level of education
-                            </option>
-                            <option value="primary">Primary</option>
-                            <option value="high-school">
+                            </el-option>
+                            <el-option value="primary">Primary</el-option>
+                            <el-option value="high-school">
                                 High School/Secondary
-                            </option>
-                        </select>
-                    </div>
-                    <div class="flex flex-col space-y-1">
-                        <label for="email" class="text-base">Email</label>
-                        <input
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="Email address">
+                        <!-- <label for="email" class="text-base">Email</label> -->
+                        <el-input
                             type="email"
                             name="email"
                             id="email"
-                            class="text-base px-5 py-2 rounded-md"
                             placeholder="Enter your email address"
                             v-model="email"
+                            size="large"
                         />
-                    </div>
+                    </el-form-item>
 
-                    <div class="flex flex-col space-y-1">
-                        <label for="password" class="text-base">Password</label>
-                        <input
+                    <el-form-item label="Password">
+                        <!-- <label for="password" class="text-base">Password</label> -->
+                        <el-input
                             type="password"
                             name="password"
                             id="password"
-                            class="text-base px-5 py-2 rounded-md"
                             placeholder="Enter your password"
                             v-model="password"
+                            size="large"
                         />
-                    </div>
+                    </el-form-item>
 
                     <!-- form actions -->
                     <div>
-                        <button
+                        <el-button
                             class="outline-none bg-purple-800 text-white hover:bg-purple-500 px-5 py-2 rounded-lg"
-                            type="submit"
+                            native-type="submit"
                         >
                             {{ authState === 'login' ? 'Login' : 'Signup' }}
-                        </button>
-                        <button
+                        </el-button>
+                        <el-button
                             class="outline-none underline hover:text-purple-500 ml-3 cursor-pointer"
                             @click="changeAuthState"
-                            type="button"
+                            native-type="button"
                         >
                             {{
                                 authState === 'login'
                                     ? 'or Sign up'
                                     : 'or Login'
                             }}
-                        </button>
+                        </el-button>
                     </div>
                 </div>
-            </form>
+            </el-form>
         </div>
     </div>
 </template>
@@ -194,7 +189,10 @@ const signup = async () => {
                     lastName: last_name,
                     levelOfEducation: level_of_education,
                 };
-                const newUser = await createUser(userData);
+                const newUser = await useFetch('/api/auth/signup', {
+                    method: 'POST',
+                    body: userData,
+                });
                 console.log(newUser);
             }
         }

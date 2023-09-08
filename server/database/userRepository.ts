@@ -1,7 +1,7 @@
 import prisma from './client';
 import { User } from 'prisma/prisma-client';
 
-type UserData = {
+export type UserData = {
     email: string;
     firstName: string;
     lastName: string;
