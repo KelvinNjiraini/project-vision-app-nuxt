@@ -1,5 +1,4 @@
 import prisma from './client';
-import { User } from 'prisma/prisma-client';
 import { UserData } from '@/utils/types';
 
 export async function createUser(userObj: UserData) {
@@ -11,5 +10,6 @@ export async function createUser(userObj: UserData) {
             levelOfEducation: userObj.levelOfEducation,
         },
     });
+
     return user;
 }
