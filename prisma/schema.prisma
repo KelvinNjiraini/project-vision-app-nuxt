@@ -11,7 +11,8 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @db.Uuid 
+  // id Int @id @default(autoincrement())
   // id String @id @unique
   email   String  @unique
   firstName String
@@ -37,7 +38,7 @@ model Exam {
 model UserExam {
   examId Int
   exam Exam @relation(fields: [examId], references: [id])
-  userId Int
+  userId String @db.Uuid
   user User @relation(fields: [userId], references: [id])
 
   @@id([examId, userId])
@@ -52,7 +53,7 @@ model School {
 }
 
 model UserSchool {
-  userId Int
+  userId String @db.Uuid
   user User @relation(fields: [userId], references: [id])
   schoolId Int
   school School @relation(fields: [schoolId], references: [id])
@@ -70,7 +71,7 @@ model Course {
 }
 
 model UserCourse {
-  userId Int
+  userId String @db.Uuid
   user User @relation(fields: [userId], references: [id])
   courseId Int
   course Course @relation(fields: [courseId], references: [id])
@@ -96,7 +97,7 @@ model SubjectScore {
 }
 
 model UserSubject {
-  userId Int
+  userId String @db.Uuid
   user User @relation(fields: [userId], references: [id])
   subjectId Int
   subject Subject @relation(fields: [subjectId], references: [id])
