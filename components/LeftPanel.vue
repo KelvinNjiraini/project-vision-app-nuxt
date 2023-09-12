@@ -85,10 +85,14 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useWindowSize } from '@vueuse/core';
+import { useGeneralStore } from 'stores/general';
+
 const { path } = useRoute();
 const { height, width } = useWindowSize();
 const client = useSupabaseClient();
+
 const user = useSupabaseUser();
+const generalStore = useGeneralStore();
 
 const panelActive = ref(false);
 
@@ -102,6 +106,10 @@ function toggleLeftPanel() {
 
 async function signOut() {
     const { error } = await client.auth.signOut();
+    if (error) {
+        throw error;
+    }
+    generalStore.setCurrentLevel(null);
 }
 // watchEffect(async () => {
 //     if (!user.value) {

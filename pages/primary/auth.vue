@@ -129,7 +129,10 @@ import { ref, onMounted } from 'vue';
 import { useRegister } from '@/composables/useRegister';
 import { FormRules, FormInstance } from 'element-plus';
 import { RegisterRule } from '@/utils/types';
+import { useGeneralStore } from '@/stores/general';
+
 const { query } = useRoute();
+const generalStore = useGeneralStore();
 
 const client = useSupabaseClient();
 const user = useSupabaseUser();
@@ -225,18 +228,7 @@ const signup = async () => {
 
     isLoading.value = true;
     try {
-        const userData = {
-            email: initialState.email,
-            firstName: initialState.firstName,
-            lastName: initialState.lastName,
-            levelOfEducation: initialState.levelOfEducation,
-        };
-        const response = await useRegister(userData);
-        if (response.error) {
-            throw response.error;
-        }
-
-        const { data, error } = await client.auth.signUp({
+        const authResponse = await client.auth.signUp({
             email: initialState.email,
             password: initialState.password,
             options: {
@@ -247,14 +239,34 @@ const signup = async () => {
                 },
             },
         });
-        if (error) {
-            throw error;
+        // if (authResponse.error) {
+        //     throw authResponse.error;
+        // }
+        console.log('Supabase auth', authResponse.data);
+
+        // feed data into the database
+        if (
+            authResponse.data &&
+            authResponse.data.user &&
+            authResponse.data.user.id
+        ) {
+            const userData = {
+                id: authResponse.data.user.id,
+                email: initialState.email,
+                firstName: initialState.firstName,
+                lastName: initialState.lastName,
+                levelOfEducation: initialState.levelOfEducation,
+            };
+            const response = await useRegister(userData);
+
+            console.log('Database response', response);
+            generalStore.setCurrentLevel(initialState.levelOfEducation);
         }
-        console.log(data);
     } catch (err) {
         console.log(err);
+    } finally {
+        isLoading.value = false;
     }
-    isLoading.value = false;
 };
 const login = async () => {
     isLoading.value = true;
@@ -264,7 +276,13 @@ const login = async () => {
     });
 
     console.log(data);
-    if (error) console.log(error);
+    if (error) {
+        console.log(error);
+        throw error;
+    }
+    generalStore.setCurrentLevel(
+        data.user?.user_metadata.levelOfEducation || 'primary'
+    );
     isLoading.value = false;
 };
 
