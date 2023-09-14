@@ -53,7 +53,7 @@
                             size="large"
                         />
                     </el-form-item>
-                    <el-form-item
+                    <!-- <el-form-item
                         label="Level Of Education"
                         prop="levelOfEducation"
                         v-if="authState === 'signup'"
@@ -73,7 +73,7 @@
                                 High School/Secondary
                             </el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="Email address" prop="email">
                         <!-- <label for="email" class="text-base">Email</label> -->
                         <el-input
@@ -127,7 +127,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRegister } from '@/composables/useRegister';
-import { FormRules, FormInstance } from 'element-plus';
+import { FormRules, FormInstance, ElNotification } from 'element-plus';
 import { RegisterRule } from '@/utils/types';
 import { useGeneralStore } from '@/stores/general';
 
@@ -143,7 +143,7 @@ const initialState = reactive<RegisterRule>({
     email: '',
     firstName: '',
     lastName: '',
-    levelOfEducation: '',
+    // levelOfEducation: '',
     password: '',
 });
 const isLoading = ref(false);
@@ -173,18 +173,18 @@ const rules = reactive<FormRules<RegisterRule>>({
             trigger: 'change',
         },
     ],
-    levelOfEducation: [
-        {
-            required: true,
-            message: 'Level of education field is required.',
-            trigger: 'change',
-        },
-        {
-            enum: ['primary', 'high-school'],
-            message:
-                'Level of education can only be "high school" or "primary"',
-        },
-    ],
+    // levelOfEducation: [
+    //     {
+    //         required: true,
+    //         message: 'Level of education field is required.',
+    //         trigger: 'change',
+    //     },
+    //     {
+    //         enum: ['primary', 'high-school'],
+    //         message:
+    //             'Level of education can only be "high school" or "primary"',
+    //     },
+    // ],
     password: [
         {
             required: true,
@@ -198,6 +198,14 @@ const rules = reactive<FormRules<RegisterRule>>({
         },
     ],
 });
+
+function errorNotification(message: string | null) {
+    ElNotification({
+        title: 'Error',
+        message: message || 'Something went wrong',
+        type: 'error',
+    });
+}
 
 function changeAuthState() {
     if (authState.value === 'login') {
@@ -227,23 +235,25 @@ const signup = async () => {
     err.value = null;
 
     isLoading.value = true;
-    try {
-        const authResponse = await client.auth.signUp({
-            email: initialState.email,
-            password: initialState.password,
-            options: {
-                data: {
-                    firstName: initialState.firstName,
-                    lastName: initialState.lastName,
-                    levelOfEducation: initialState.levelOfEducation,
-                },
-            },
-        });
-        // if (authResponse.error) {
-        //     throw authResponse.error;
-        // }
-        console.log('Supabase auth', authResponse.data);
 
+    const authResponse = await client.auth.signUp({
+        email: initialState.email,
+        password: initialState.password,
+        options: {
+            data: {
+                firstName: initialState.firstName,
+                lastName: initialState.lastName,
+                levelOfEducation: 'primary',
+                // levelOfEducation: initialState.levelOfEducation
+            },
+        },
+    });
+    if (authResponse.error) {
+        console.log('Supabase auth', authResponse.data);
+        throw authResponse.error;
+    }
+
+    try {
         // feed data into the database
         if (
             authResponse.data &&
@@ -255,35 +265,43 @@ const signup = async () => {
                 email: initialState.email,
                 firstName: initialState.firstName,
                 lastName: initialState.lastName,
-                levelOfEducation: initialState.levelOfEducation,
+                levelOfEducation: 'primary',
+                // levelOfEducation: initialState.levelOfEducation,
             };
             const response = await useRegister(userData);
 
             console.log('Database response', response);
-            generalStore.setCurrentLevel(initialState.levelOfEducation);
+            // generalStore.setCurrentLevel(initialState.levelOfEducation);
         }
-    } catch (err) {
+    } catch (err: any) {
         console.log(err);
+        errorNotification(err.message);
     } finally {
         isLoading.value = false;
     }
 };
 const login = async () => {
     isLoading.value = true;
-    const { data, error } = await client.auth.signInWithPassword({
-        email: initialState.email,
-        password: initialState.password,
-    });
+    try {
+        const { data, error } = await client.auth.signInWithPassword({
+            email: initialState.email,
+            password: initialState.password,
+        });
 
-    console.log(data);
-    if (error) {
+        console.log(data);
+        if (error) {
+            console.log(error);
+            throw error;
+        }
+        generalStore.setCurrentLevel(
+            data.user?.user_metadata.levelOfEducation || 'primary'
+        );
+    } catch (error: any) {
         console.log(error);
-        throw error;
+        errorNotification(error.message);
+    } finally {
+        isLoading.value = false;
     }
-    generalStore.setCurrentLevel(
-        data.user?.user_metadata.levelOfEducation || 'primary'
-    );
-    isLoading.value = false;
 };
 
 watchEffect(async () => {

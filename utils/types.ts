@@ -9,7 +9,7 @@ export type UserData = {
 export interface RegisterRule {
     firstName: string;
     lastName: string;
-    levelOfEducation: string;
+    // levelOfEducation: string;
     email: string;
     password: string;
 }

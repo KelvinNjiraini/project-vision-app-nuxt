@@ -10,10 +10,16 @@ export const useRegister = async function (userInfo: UserData) {
         lastName,
         levelOfEducation,
     };
-    const response = await $fetch('/api/auth/signup', {
+    const { data, error } = await useFetch('/api/auth/signup', {
         method: 'POST',
         body: userData,
     });
 
-    return response;
+    if (error.value)
+        throw createError({
+            ...error.value,
+            statusMessage: `Error registering user`,
+        });
+
+    return unref(data);
 };
