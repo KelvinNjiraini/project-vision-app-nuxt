@@ -10,7 +10,86 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+// High school
+model UserHighSch{
+  id String @id @db.Uuid 
+  email   String  @unique
+  firstName String
+  lastName String
+  levelOfEducation String
+  subjects UserSubjectHighSch[]
+  exams UserExamHighSch[]
+  favoriteCourses UserCourseHighSch[]
+}
+
+model CourseHighSch {
+  id String @id @default(uuid()) @db.Uuid
+  // id Int @id @default(autoincrement())
+  name String
+  duration Int
+  description String
+  pathways String?
+  users UserCourseHighSch[]
+}
+
+model SubjectHighSch {
+  id String @id @default(uuid()) @db.Uuid
+  name String
+  subjectScores SubjectScoreHighSch[]
+  users UserSubjectHighSch[]
+}
+
+model SubjectScoreHighSch {
+  id String @id @default(uuid()) @db.Uuid
+  // id Int @id @default(autoincrement())
+  score Float
+  subject SubjectHighSch @relation(fields: [subjectId], references: [id])
+  subjectId String @db.Uuid
+  exam ExamHighSch @relation(fields: [examId], references: [id])
+  examId String @db.Uuid
+}
+
+model ExamHighSch{
+  id String @id @default(uuid()) @db.Uuid
+  name String
+  form  Int
+  subjectScores SubjectScoreHighSch[]
+  users UserExamHighSch[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserExamHighSch{
+  examId String @db.Uuid
+  exam ExamHighSch @relation(fields: [examId], references: [id])
+  userId String @db.Uuid
+  user UserHighSch @relation(fields: [userId], references: [id])
+
+  @@id([examId, userId])
+}
+
+model UserCourseHighSch {
+  userId String @db.Uuid
+  user UserHighSch @relation(fields: [userId], references: [id])
+  courseId String @db.Uuid
+  course CourseHighSch @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId])
+}
+
+model UserSubjectHighSch {
+  userId String @db.Uuid
+  user UserHighSch @relation(fields: [userId], references: [id])
+  subjectId String @db.Uuid
+  subject SubjectHighSch @relation(fields: [subjectId], references: [id])
+
+  @@id([userId, subjectId])
+}
+
+///////////////////////Primary school//////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+
+model UserPrimary {
   id String @id @db.Uuid 
   // id Int @id @default(autoincrement())
   // id String @id @unique
@@ -18,89 +97,74 @@ model User {
   firstName String
   lastName String
   levelOfEducation String
-  subjects UserSubject[]
-  exams UserExam[]
-  favoriteCourses UserCourse[]
-  favoriteSchool UserSchool[]
+  subjects UserSubjectPrimary[]
+  exams UserExamPrimary[]
+  // favoriteCourses UserCourse[]
+  favoriteSchool UserSchoolPrimary[]
 }
 
-model Exam {
-  id Int @id @default(autoincrement())
+model ExamPrimary {
+  id String @id @default(uuid()) @db.Uuid
+  // id Int @id @default(autoincrement())
   name String
   class Int?
-  form  Int?
-  subjectScores SubjectScore[]
-  users UserExam[]
+  subjectScores SubjectScorePrimary[]
+  users UserExamPrimary[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model UserExam {
-  examId Int
-  exam Exam @relation(fields: [examId], references: [id])
+model UserExamPrimary {
+  examId String @db.Uuid
+  exam ExamPrimary @relation(fields: [examId], references: [id])
   userId String @db.Uuid
-  user User @relation(fields: [userId], references: [id])
+  user UserPrimary @relation(fields: [userId], references: [id])
 
   @@id([examId, userId])
 }
 
-model School {
-  id Int @id @default(autoincrement())
+model SchoolPrimary {
+  id String @id @default(uuid()) @db.Uuid
+  // id Int @id @default(autoincrement())
   name String
   level String
   type String
-  users UserSchool[]
+  county String?
+  users UserSchoolPrimary[]
 }
 
-model UserSchool {
+model UserSchoolPrimary {
   userId String @db.Uuid
-  user User @relation(fields: [userId], references: [id])
-  schoolId Int
-  school School @relation(fields: [schoolId], references: [id])
+  user UserPrimary @relation(fields: [userId], references: [id])
+  schoolId String @db.Uuid
+  school SchoolPrimary @relation(fields: [schoolId], references: [id])
 
   @@id([userId, schoolId])
 }
 
-model Course {
-  id Int @id @default(autoincrement())
+model SubjectPrimary {
+  id String @id @default(uuid()) @db.Uuid
+  // id Int @id @default(autoincrement())
   name String
-  duration Int
-  description String
-  pathways String
-  users UserCourse[]
+  subjectScores SubjectScorePrimary[]
+  users UserSubjectPrimary[]
 }
 
-model UserCourse {
-  userId String @db.Uuid
-  user User @relation(fields: [userId], references: [id])
-  courseId Int
-  course Course @relation(fields: [courseId], references: [id])
-
-  @@id([userId, courseId])
-}
-
-model Subject {
-  id Int @id @default(autoincrement())
-  name String
-  level String
-  subjectScores SubjectScore[]
-  users UserSubject[]
-}
-
-model SubjectScore {
-  id Int @id @default(autoincrement())
+model SubjectScorePrimary {
+  id String @id @default(uuid()) @db.Uuid
+  // id Int @id @default(autoincrement())
   score Float
-  subject Subject @relation(fields: [subjectId], references: [id])
-  subjectId Int
-  exam Exam @relation(fields: [examId], references: [id])
-  examId Int
+  subject SubjectPrimary @relation(fields: [subjectId], references: [id])
+  subjectId String @db.Uuid
+  exam ExamPrimary @relation(fields: [examId], references: [id])
+  examId String @db.Uuid
 }
 
-model UserSubject {
+model UserSubjectPrimary {
   userId String @db.Uuid
-  user User @relation(fields: [userId], references: [id])
-  subjectId Int
-  subject Subject @relation(fields: [subjectId], references: [id])
+  user UserPrimary @relation(fields: [userId], references: [id])
+  subjectId String @db.Uuid
+  subject SubjectPrimary @relation(fields: [subjectId], references: [id])
 
   @@id([userId, subjectId])
 }
